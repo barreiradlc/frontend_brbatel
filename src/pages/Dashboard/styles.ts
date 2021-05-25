@@ -1,94 +1,179 @@
 import styled from "styled-components";
+import Modal from 'react-modal';
 
-export const Container = styled.div`
-  border-radius: 4px;
-  box-shadow: 1px 3px 5px 2px rgba(0, 0, 0, 0.23);
-  justify-content: space-between;
-  max-width: 900px;
+
+export const ModalContainer = styled(Modal)`
+
+    div {
+      max-height: 80vh;
+      justify-content: center;
+      max-width: 800px;
+      align-items: center;
+      display: flex;
+      flex: 1;
+      margin: 0;
+      flex-direction: column;
+      
+      margin: 0 15px;
+    }
+  
+    p {
+      font-size:  17px;
+    }
+`
+
+interface IListProps {
+  listType: 'inline' | 'card'
+}
+
+export const Container = styled.div<IListProps>`
+  justify-content: space-between;  
   display: flex;
   flex: 1;
   margin: 0 auto;
   flex-direction: column;
-`
 
-export const Header = styled.div`
-  background: #d1b27d7d;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-  padding: 8px 16px;
-`
-
-export const Logo = styled.img`
-  width: 130px;  
-`
-export const InputFilter = styled.input`
-  padding: 8px;
-  border: none;
-  border-radius: 2px;
-  width: 240px;
-`
-
-export const UserContainer = styled.div`
-  display: flex;
-  flex-direction:row;
-  align-items: center;
-  justify-content: center;
-`
-
-export const UserName = styled.p` 
-  margin: 0 0 0 15px;
-  color: #fff;
-  font-weight: 700;
-`
-
-export const Body = styled.div`
-  padding: 46px 16px 16px;
-  background-color: #004751;  
-`
-
-export const TopContent = styled.div`
-  padding-bottom: 8px ;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  display: flex;
-`
-
-export const Title = styled.p`
-  color: #fff;
-  font-size: 21px;
-`
-
-export const Button = styled.div``
-
-export const Footer = styled.div`
-  padding: 16px;
-  background-color: #fff;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  select {
-    font-size: 15px;
-  }
-`
-
-export const TakeOptions = styled.div`
-  margin: 0 12px;
-  `
-export const PagesLength = styled.p`
-  margin: 0 12px;
-`
-export const Paginate = styled.div`
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-
-  button {
+  header {
+    background: #1d1d1b;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    padding: 4px;
+    display: flex;
+    padding: 32px 6rem;
+
+    img {
+      width: 130px;
+    }
+
+    input {
+      border: 2px solid #555;
+      padding: 16px;
+      border: none;
+      border-radius: 4px;
+      width: 340px;
+    }
+
+    div {
+      display: flex;
+      flex-direction:row;
+      justify-content: center;
+      align-items: center;
+
+      h5 {
+        margin: 0 0 0 15px;
+        color: #fff;
+        font-size: 21px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  > div {
+    background-color: #f7f9fc;
+    padding: 32px 6rem;
+
+    > div {
+    
+      display: flex;
+      padding-bottom: 8px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: row;
+
+      .add-company {
+        flex-direction: row;
+        display: flex;
+        align-items: center;
+        
+        
+        p {
+          padding: 8px;
+          border-right: 2px solid #1d1d1b;
+          color: #1d1d1b;
+          font-size: 21px;
+        }
+
+        button {
+          
+          background-color: #004752;
+
+          color: #fff;
+          padding: 4px 12px;
+          margin: 0 8px;
+
+        }
+      }
+
+      .change-layout {      
+        flex-direction: row;
+        display: flex;
+        justify-content: center;
+
+        > button {
+          background-color: #004752;
+
+          color: #fff;
+          padding: 4px 12px;
+          margin: 0 8px;
+
+          svg {
+            display: flex;
+          }
+          
+        }
+
+        > button {
+          background-color: #004752;
+
+          color: #fff;
+          padding: 4px 12px;
+          margin: 0 8px;
+
+          svg {
+            display: flex;
+          }
+          
+        }
+
+      }
+    }
+
+  }
+  
+  footer {
+    padding: 32px 6rem;
+    background-color: #fff;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    select {
+      padding: 4px;
+      margin: 4px;
+      font-size: 15px;
+    }
+
+    p {
+      margin: 12px;
+    }
+    
+    > div {
+      flex-direction: row;
+      display: flex;
+      justify-content: center;
+
+      button {
+        align-items: center;
+        padding: 4px;
+        margin: 4px;
+
+        svg {
+          display: flex;
+        }
+      }
+
+    }
+
   }
 `
-export const IconButton = styled.image``

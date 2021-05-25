@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
-
-
 export const Container = styled.div`
   width: calc(100% * (1/4) - 10px - 1px);
   box-shadow: 1px 3px 5px 2px rgba(0, 0, 0, 0.23);
-  margin: 8px 4px;
-  padding: 8px 16px;
+  margin-right: 5px;
+  margin-top: 8px;
+  padding: 16px 8px;
   border-radius: 4px;
   justify-content: flex-start ;
 `
