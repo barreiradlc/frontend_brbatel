@@ -3,19 +3,103 @@ import Modal from 'react-modal';
 
 
 export const ModalContainer = styled(Modal)`
-
-    div {
+      border: 2px solid rgb(85, 85, 85);
+      border-radius: 5px;
+      background-color: #f7f9fc;
       max-height: 80vh;
       justify-content: center;
       max-width: 800px;
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       flex: 1;
-      margin: 0;
-      flex-direction: column;
+      margin: 5em;
+      flex-direction: column;  
+
+      > header {
+        padding: 16px 24px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        border-bottom: 2px solid #dedede;
+
+        button {
+          align-self: center;
+          justify-self: center;
+          display: flex;
+          padding: 8px;
+          color: #fff;          
+          background-color: #004752;          
+        }
+      }
+
+      > form {
+        width: 100%;
+        padding: 16px 24px;
+        display: flex;
+        flex-direction: column;
+        
+        label {
+          margin-top: 6px;
+        }
+
+        input {
+          margin: 6px 0;
+          border: 2px solid #555;
+          padding: 16px;
+          border: none;
+          border-radius: 4px;
+          width: 340px;
+        }
+        
+        select {
+
+          margin: 6px 0;
+          border: 2px solid #555;
+          padding: 16px;
+          border: none;
+          border-radius: 4px;
+          width: 340px;
+          
+          option {
+            padding: 0 12px;
+          }
+        }
+        
+        textarea {
+          margin: 6px 0;
+          border: 2px solid #555;
+          padding: 16px;
+          border: none;
+          border-radius: 4px;
+          width: 340px;
+          max-width: 340px;
+          max-height: 450px;
+          min-height: 140px;
+          resize: none;
+        }
+      }
       
-      margin: 0 15px;
-    }
+      > footer {
+        border-top: 2px solid #dedede;
+        width: 100%;
+        padding: 16px 24px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        button {
+          padding: 12px;
+          margin: 0 0 0 12px;
+        }
+
+        .invertButton {
+          background-color: #004752;
+          color: #f7f9fc;
+        }
+
+
+      }
   
     p {
       font-size:  17px;
@@ -128,7 +212,7 @@ export const Container = styled.div<IListProps>`
 
           color: #fff;
           padding: 4px 12px;
-          margin: 0 8px;
+          margin: 0 0 0 16px;
 
           svg {
             display: flex;

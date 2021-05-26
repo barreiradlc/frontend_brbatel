@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FaBorderAll, FaChevronLeft, FaChevronRight, FaList } from 'react-icons/fa';
+import { FaBorderAll, FaChevronLeft, FaChevronRight, FaList, FaTimes } from 'react-icons/fa';
 
 import { Container, ModalContainer } from './styles';
 import logoBRBatel from '../../assets/Assinatura_Horizontal-logo.png'
@@ -7,24 +7,18 @@ import { FaUserCircle } from 'react-icons/fa';
 import Button from '../../components/Button';
 import CardList from '../../components/Companies/CardList';
 import { api } from '../../services/api';
-import { ICompany } from '../../types/ICompany';
+import { IANUAL_EARNINGS, ICompany } from '../../types/ICompany';
+import { getLabelFromEarnings } from '../../utils/companyUtils';
+import InlineList from '../../components/Companies/InlineList';
 
-const customStyles = {
-  content: {
-      // background: colors['fade'],
-      display: 'table',
-      // background: colors['fade'],
-      border: '2px solid #555',
-      padding: '5px',
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-25%',
-      transform: 'translate(-50%, -50%)',
-  }
-};
-
+const ANNUAL_EARNINGS = [
+  { label : 'BELOW_10_MIL'},
+  { label : 'FROM_10_TO_50_MIL'},
+  { label : 'FROM_50_TO_200_MIL'},
+  { label : 'FROM_200_TO_500_MIL'},
+  { label : 'ABOVE_500_MIL'}
+]
+  
 interface IOptions {
   take: number;
   page: number;
@@ -62,6 +56,9 @@ const Dashboard: React.FC = () => {
       params: options
     });
 
+    console.log("data.length, options.take")
+    console.log(data.length, options.take)
+
     if(data.length < options.take) {
       setHaveMore(false)
     } else {
@@ -72,6 +69,7 @@ const Dashboard: React.FC = () => {
   }, [options])
 
   const backPage = useCallback(() => {
+    if(options.page < 2) return;
     const { page } = options;
 
     setOptions({
@@ -81,9 +79,13 @@ const Dashboard: React.FC = () => {
   }, [options])
   
   const addPage = useCallback(() => {
+    console.log("haveMore")
+    console.log(haveMore)
+
+    if(!haveMore) return;
     const { page } = options;
 
-    setOptions({ 
+    setOptions({
       ...options,
       page: page + 1 
     })
@@ -103,18 +105,22 @@ const Dashboard: React.FC = () => {
         <div>
           <div className="add-company">
             <p>Empresas</p> 
-            <Button label="Adicionar" onclick={() => setOpenModal(true)} />
+            <Button label="Adicionar +" onclick={() => setOpenModal(true)} />
           </div>
           <div className="change-layout">
-            <button onClick={backPage} disabled={listType === 'inline'}>
+            <button onClick={() => setListType('inline')} disabled={listType === 'inline'}>
               <FaList />
             </button>
-            <button disabled={!haveMore} onClick={addPage}>
+            <button disabled={listType === 'card'} onClick={() => setListType('card')}>
               <FaBorderAll />
             </button>
           </div>
         </div>
-        <CardList data={companies} />
+        {listType === 'inline' ?
+          <InlineList data={companies} />
+          :
+          <CardList data={companies} /> 
+        }
       </div>
       <footer>
         <select
@@ -133,17 +139,47 @@ const Dashboard: React.FC = () => {
           <button disabled={options.page === 1} onClick={backPage}>
             <FaChevronLeft />
           </button>
-          <button disabled={!haveMore} onClick={addPage}>
+          <button disabled={!haveMore} onClick={addPage} >
             <FaChevronRight />
           </button>
         </div>
       </footer>
 
+      <ModalContainer isOpen={modalOpenModal} ariaHideApp >
+        <header>
+          <h2>Cadastrar empresa</h2>
+          <button onClick={() => setOpenModal(false)}><FaTimes /></button>
+        </header>
+        
+        <form>
+          <label htmlFor="name">
+            Nome:
+          </label>
+          <input id="name" name="name" placeholder="Nome" />          
+          <label htmlFor="cnpj">
+            CNPJ:
+          </label>
+          <input id="cnpj" name="cnpj" placeholder="CNPJ" />          
+          <label htmlFor="annual_earnings">
+            Faturamento anual:
+          </label>
+          <div>
+            <select id="annual_earnings">
+            {ANNUAL_EARNINGS.map(( earning ) => (
+              <option key={earning.label} value={earning.label}>{getLabelFromEarnings(earning.label as IANUAL_EARNINGS)}</option>
+            ))}
+          </select>
+          </div>
+          <label htmlFor="about">
+            CNPJ:
+          </label>
+          <textarea id="about" name="about" placeholder="Sobre..." />          
 
-      <ModalContainer isOpen={modalOpenModal} ariaHideApp={false} style={customStyles}>
-        <div>
-        <p> Hello </p>
-        </div>
+        </form>
+        <footer>
+          <button type="button">Cancelar</button>
+          <button type="button" className="invertButton">Salvar</button>
+        </footer>
       </ModalContainer>
     </Container>
   )
