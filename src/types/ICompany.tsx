@@ -6,10 +6,11 @@ export enum IANUAL_EARNINGS {
   ABOVE_500_MIL = 'ABOVE_500_MIL'
 }
 
-export interface ICompany {
-  id: string
-  name: string
-  cnpj: string
+export interface ICompany { 
+  id: string;
+  name: string;
+  cnpj: string;
   anual_earnings: IANUAL_EARNINGS;
-  about: string
+  about: string;
+  thumbnail?: string;
 }

@@ -10,7 +10,7 @@ interface IInlineList{
 const InlineList: React.FC<IInlineList> = ({ data }: IInlineList) => {
   return (
     <Container>
-      {data.map( company => <InlinePrimary data={company} /> )}
+      {data.map( company => <InlinePrimary key={company.id} data={company} /> )}
     </Container>
   );
 }

@@ -10,7 +10,7 @@ interface ICardList{
 const CardList: React.FC<ICardList> = ({ data }: ICardList) => {
   return (
     <Container>
-      {data.map( company => <CardPrimary data={company} /> )}
+      {data.map( company => <CardPrimary key={company.id} data={company} /> )}
     </Container>
   );
 }

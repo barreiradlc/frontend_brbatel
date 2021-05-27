@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FaBorderAll, FaChevronLeft, FaChevronRight, FaList, FaTimes } from 'react-icons/fa';
 
-import { Container, ModalContainer } from './styles';
+import { Container } from './styles';
 import logoBRBatel from '../../assets/Assinatura_Horizontal-logo.png'
 import { FaUserCircle } from 'react-icons/fa';
 import Button from '../../components/Button';
@@ -10,8 +10,11 @@ import { api } from '../../services/api';
 import { IANUAL_EARNINGS, ICompany } from '../../types/ICompany';
 import { getLabelFromEarnings } from '../../utils/companyUtils';
 import InlineList from '../../components/Companies/InlineList';
+import { ModalForm } from '../../components/Companies/ModalForm';
+import { ModalShow } from '../../components/Companies/ModalShow';
+import { useCompanyModal } from '../../hooks/CompanyModalProvider';
 
-const ANNUAL_EARNINGS = [
+export const ANNUAL_EARNINGS = [
   { label : 'BELOW_10_MIL'},
   { label : 'FROM_10_TO_50_MIL'},
   { label : 'FROM_50_TO_200_MIL'},
@@ -26,10 +29,12 @@ interface IOptions {
 }
 
 const Dashboard: React.FC = () => {
+  const { toggleModalForm } = useCompanyModal()
   const [modalOpenModal,setOpenModal] = useState(false);
   const [companies, setCompanies] = useState<ICompany[]>([] as ICompany[]);
   const [listType, setListType] = useState<'card' | 'inline'>('card');
   const [haveMore, setHaveMore] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
   const [options, setOptions] = useState<IOptions>({
     page: 1,
     query: '',
@@ -43,7 +48,11 @@ const Dashboard: React.FC = () => {
 
   const handleChangeInputInt = useCallback((e: any) => {
     const { value, id } = e.target
-    setOptions({ ...options, [id]: Number(value) });
+    if(id === 'take'){
+      setOptions({ ...options, [id]: Number(value), page: 1 });
+    } else {
+      setOptions({ ...options, [id]: Number(value) });
+    }
   }, [options]);  
 
   useEffect(() => {
@@ -56,16 +65,21 @@ const Dashboard: React.FC = () => {
       params: options
     });
 
-    console.log("data.length, options.take")
-    console.log(data.length, options.take)
+    const { nodes, total } = data
+    const { page, take } = options
 
-    if(data.length < options.take) {
+    const contentRendered = page * nodes.length;
+   
+    //TODO, correção em paginação
+
+    if(contentRendered <= total && take !== nodes.length) {
       setHaveMore(false)
     } else {
       setHaveMore(true)
     }
 
-    setCompanies(data)
+    setTotal(total)
+    setCompanies(nodes)
   }, [options])
 
   const backPage = useCallback(() => {
@@ -79,7 +93,6 @@ const Dashboard: React.FC = () => {
   }, [options])
   
   const addPage = useCallback(() => {
-    console.log("haveMore")
     console.log(haveMore)
 
     if(!haveMore) return;
@@ -90,6 +103,10 @@ const Dashboard: React.FC = () => {
       page: page + 1 
     })
   }, [options])
+
+  function handleToggleModal(){
+    setOpenModal(prevData => !prevData)
+  }
 
   return (
     <Container listType={listType}>
@@ -102,10 +119,10 @@ const Dashboard: React.FC = () => {
         </div>
       </header>
       <div>
-        <div>
+        <div className="top-options">
           <div className="add-company">
             <p>Empresas</p> 
-            <Button label="Adicionar +" onclick={() => setOpenModal(true)} />
+            <Button label="Adicionar +" onclick={toggleModalForm} />
           </div>
           <div className="change-layout">
             <button onClick={() => setListType('inline')} disabled={listType === 'inline'}>
@@ -134,7 +151,7 @@ const Dashboard: React.FC = () => {
           <option value="10">10 por página</option>
           <option value="20">20 por página</option>
         </select>
-        <p> {companies.length} empresa{companies.length > 1 ? 's' : ''} encontrada{companies.length > 1 ? 's' : ''} </p>
+        <p> {companies.length} de {total} empresa{companies.length > 1 ? 's' : ''} encontrada{companies.length > 1 ? 's' : ''} </p>
         <div>
           <button disabled={options.page === 1} onClick={backPage}>
             <FaChevronLeft />
@@ -145,42 +162,9 @@ const Dashboard: React.FC = () => {
         </div>
       </footer>
 
-      <ModalContainer isOpen={modalOpenModal} ariaHideApp >
-        <header>
-          <h2>Cadastrar empresa</h2>
-          <button onClick={() => setOpenModal(false)}><FaTimes /></button>
-        </header>
-        
-        <form>
-          <label htmlFor="name">
-            Nome:
-          </label>
-          <input id="name" name="name" placeholder="Nome" />          
-          <label htmlFor="cnpj">
-            CNPJ:
-          </label>
-          <input id="cnpj" name="cnpj" placeholder="CNPJ" />          
-          <label htmlFor="annual_earnings">
-            Faturamento anual:
-          </label>
-          <div>
-            <select id="annual_earnings">
-            {ANNUAL_EARNINGS.map(( earning ) => (
-              <option key={earning.label} value={earning.label}>{getLabelFromEarnings(earning.label as IANUAL_EARNINGS)}</option>
-            ))}
-          </select>
-          </div>
-          <label htmlFor="about">
-            CNPJ:
-          </label>
-          <textarea id="about" name="about" placeholder="Sobre..." />          
-
-        </form>
-        <footer>
-          <button type="button">Cancelar</button>
-          <button type="button" className="invertButton">Salvar</button>
-        </footer>
-      </ModalContainer>
+      {/* <ModalForm openedModal={modalOpenModal} handleToggleModal={handleToggleModal} /> */}
+      
+      
     </Container>
   )
 }

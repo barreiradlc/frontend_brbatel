@@ -7,11 +7,31 @@ export const Container = styled.div`
   margin-top: 8px;
   padding: 16px 8px;
   border-radius: 4px;
-  justify-content: flex-start ;
+  justify-content: space-between ;
   display: flex;
+  align-items: center;
+
+
+  .contentBody{
+    flex-direction: row;
+    display: flex;
+  }
 
   div {
     flex-direction: row;
+
+      button {
+        padding: 8px 16px;
+        margin: 0 32px;
+        background-color: #555;
+        color: #fff;
+        align-self: center;
+        justify-self: center;
+      }
+
+    div {
+      
+    }
   }
 
   img {
@@ -37,4 +57,6 @@ export const Container = styled.div`
     font-weight: 700;
     opacity: 0.7;
   }
+
+  
 `

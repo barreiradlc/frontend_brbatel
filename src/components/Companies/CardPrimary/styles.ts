@@ -7,12 +7,27 @@ export const Container = styled.div`
   margin-top: 8px;
   padding: 16px 8px;
   border-radius: 4px;
-  justify-content: flex-start ;
+  align-self: flex-start;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    button {
+      padding: 8px 16px;
+      margin: 0 8px;
+      background-color: #555;
+      color: #fff;
+    }
+
+  }
 `
 
 export const Thumbnail = styled.img`
   width: 120px;
   height: 120px;
+  border: 3px solid #dedede;
   border-radius: 50%;
   margin: 4px;
 `
