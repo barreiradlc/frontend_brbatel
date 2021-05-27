@@ -13,6 +13,8 @@ import TextArea from "../../Form/TextArea";
 import SelectInput from "../../Form/Select";
 import InputMask from "../../Form/InputMask";
 import { api } from "../../../services/api";
+import { useCompanyList } from "../../../hooks/CompanyListProvider";
+import { parseCNPJ } from "../../../utils/stringUtils";
 
 interface IModalFormProps{
   openedModal: boolean;
@@ -23,29 +25,48 @@ interface IModalFormProps{
 
 export function ModalForm({ openedModal, handleToggleModal, company }: IModalFormProps) {
   const formRef = useRef<FormHandles>(null)
+  const { handleUpdateOptions } = useCompanyList()
+
+  function handleFinishRequest(name: string){
+    Swal.fire({
+      title: 'Sucesso!',
+      text: `Empresa ${name} ${company.id ? 'atualizada' : 'cadastrada'} com sucesso!`,
+      icon: 'success',
+      confirmButtonText: 'OK',      
+    })
+    .then(() => handleUpdateOptions({
+      page: 1,
+      take: 5,
+      query: ''
+    }))
+  }
 
   async function handleSubmitForm(values: any ,{ reset }: any) {
     try {
+      const parsedcnpj = await parseCNPJ(values.cnpj)
+      
+      const companyDTO = {...values, cnpj: parsedcnpj}
+
       const schema = validateFormCompany();
 
-      const parsedcnpj = ''
-
-      await schema.validate({...values, cnpj: parsedcnpj}, {
+      await schema.validate(companyDTO, {
         abortEarly: false
       })
 
-      const { data } = await api.post('company', values)
+      if(!!company.id){
+        const { data } = await api.put(`company/${company.id}`, companyDTO)
 
-      Swal.fire({
-        title: 'Sucesso!',
-        text: `Empresa ${data.name} cadastrada com sucesso!`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      })
+        handleFinishRequest(data.name)
+      } else {
+        const { data } = await api.post('company', companyDTO)
+  
+        handleFinishRequest(data.name)
+      }
 
       handleToggleModal();
 
       reset();
+
     } catch (error) {
       if(error instanceof Yup.ValidationError){
         let errorMessages = {}

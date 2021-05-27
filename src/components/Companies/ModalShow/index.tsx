@@ -38,7 +38,9 @@ export function ModalShow({ openedModal, handleToggleModal, company }: IModalSho
       cancelButtonText: 'Cancelar'
     })
 
-    console.log(company)
+    if(!company.id){
+      throw new Error(`erro ao deletar ${company.name}`)
+    }
 
     try {
       if (isConfirmed) {
@@ -51,6 +53,7 @@ export function ModalShow({ openedModal, handleToggleModal, company }: IModalSho
           confirmButtonColor: '#004752'
         })
 
+        
         handleToggleModal()
       }
 

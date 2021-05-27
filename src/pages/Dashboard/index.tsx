@@ -13,6 +13,7 @@ import InlineList from '../../components/Companies/InlineList';
 import { ModalForm } from '../../components/Companies/ModalForm';
 import { ModalShow } from '../../components/Companies/ModalShow';
 import { useCompanyModal } from '../../hooks/CompanyModalProvider';
+import { useCompanyList } from '../../hooks/CompanyListProvider';
 
 export const ANNUAL_EARNINGS = [
   { label : 'BELOW_10_MIL'},
@@ -21,7 +22,7 @@ export const ANNUAL_EARNINGS = [
   { label : 'FROM_200_TO_500_MIL'},
   { label : 'ABOVE_500_MIL'}
 ]
-  
+
 interface IOptions {
   take: number;
   page: number;
@@ -30,83 +31,43 @@ interface IOptions {
 
 const Dashboard: React.FC = () => {
   const { toggleModalForm } = useCompanyModal()
-  const [modalOpenModal,setOpenModal] = useState(false);
-  const [companies, setCompanies] = useState<ICompany[]>([] as ICompany[]);
-  const [listType, setListType] = useState<'card' | 'inline'>('card');
-  const [haveMore, setHaveMore] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(0);
-  const [options, setOptions] = useState<IOptions>({
-    page: 1,
-    query: '',
-    take: 10
-  } as IOptions);
+  const [modalOpenModal,setOpenModal] = useState(false);    
+  const [listType, setListType] = useState<'card' | 'inline'>('card');  
+  const { companies, handleUpdateOptions, options, haveMore, total } = useCompanyList()
 
   const handleChangeInput = useCallback((e: any) => {
     const { value, id } = e.target
-    setOptions({ ...options, [id]: value })
-  }, [options]);
+    handleUpdateOptions({ ...options, [id]: value })
+  }, [handleUpdateOptions, options]);
 
   const handleChangeInputInt = useCallback((e: any) => {
     const { value, id } = e.target
     if(id === 'take'){
-      setOptions({ ...options, [id]: Number(value), page: 1 });
+      handleUpdateOptions({ ...options, [id]: Number(value), page: 1 });
     } else {
-      setOptions({ ...options, [id]: Number(value) });
+      handleUpdateOptions({ ...options, [id]: Number(value) });
     }
-  }, [options]);  
-
-  useEffect(() => {
-    fetchCompanies();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
-
-  const fetchCompanies = useCallback(async () => {
-    const { data } = await api.get('company', {
-      params: options
-    });
-
-    const { nodes, total } = data
-    const { page, take } = options
-
-    const contentRendered = page * nodes.length;
-   
-    //TODO, correção em paginação
-
-    if(contentRendered <= total && take !== nodes.length) {
-      setHaveMore(false)
-    } else {
-      setHaveMore(true)
-    }
-
-    setTotal(total)
-    setCompanies(nodes)
-  }, [options])
+  }, [handleUpdateOptions, options]);    
 
   const backPage = useCallback(() => {
     if(options.page < 2) return;
     const { page } = options;
 
-    setOptions({
+    handleUpdateOptions({
       ...options,
       page: page - 1 
     })
-  }, [options])
+  }, [handleUpdateOptions, options])
   
   const addPage = useCallback(() => {
-    console.log(haveMore)
-
     if(!haveMore) return;
     const { page } = options;
 
-    setOptions({
+    handleUpdateOptions({
       ...options,
       page: page + 1 
     })
-  }, [options])
-
-  function handleToggleModal(){
-    setOpenModal(prevData => !prevData)
-  }
+  }, [haveMore, options, handleUpdateOptions])
 
   return (
     <Container listType={listType}>
@@ -151,7 +112,7 @@ const Dashboard: React.FC = () => {
           <option value="10">10 por página</option>
           <option value="20">20 por página</option>
         </select>
-        <p> {companies.length} de {total} empresa{companies.length > 1 ? 's' : ''} encontrada{companies.length > 1 ? 's' : ''} </p>
+        <p> {companies.length} de {total} empresa{companies.length > 1 ? 's' : ' '} encontrada{companies.length > 1 ? 's' : ' '} </p>
         <div>
           <button disabled={options.page === 1} onClick={backPage}>
             <FaChevronLeft />
@@ -160,11 +121,7 @@ const Dashboard: React.FC = () => {
             <FaChevronRight />
           </button>
         </div>
-      </footer>
-
-      {/* <ModalForm openedModal={modalOpenModal} handleToggleModal={handleToggleModal} /> */}
-      
-      
+      </footer>      
     </Container>
   )
 }
