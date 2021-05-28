@@ -32,7 +32,25 @@ const CompanyListProvider: React.FC = ({ children }) => {
     take: 10
   } as IOptions);
 
+  
+  const handleUpdateCompanies = useCallback((data) => {
+    setCompanies(data)
+  }, [companies])
+  
+  const handleUpdateOptions = useCallback((data) => {
+    console.log(data)
+
+    setOptions({ ...options, ...data })
+  }, [companies])
+  
+  useEffect(() => {
+    console.log('fetch')
+    fetchCompanies()
+  },[options])
+  
   const fetchCompanies = useCallback(async () => {
+    console.log("Fetch", options)
+
     const { data } = await api.get('company', {
       params: options
     });
@@ -51,18 +69,6 @@ const CompanyListProvider: React.FC = ({ children }) => {
     setTotal(total)
     handleUpdateCompanies(nodes)
   }, [options])
-
-  const handleUpdateCompanies = useCallback((data) => {
-    setCompanies(data)
-  }, [companies])
-  
-  const handleUpdateOptions = useCallback((data) => {
-    setOptions({ ...data, ...options})
-  }, [companies])
-
-  useEffect(() => {
-    fetchCompanies()
-  },[options])
 
   return (
     <CompanyListProviderContext.Provider value={{ companies, handleUpdateOptions, options, haveMore, total }}>
