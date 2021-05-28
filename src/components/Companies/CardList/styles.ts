@@ -5,5 +5,5 @@ export const Container = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   background: #f7f9fc;
-  justify-content: flex-start;
+  justify-content: space-between;  
 `
