@@ -43,6 +43,17 @@ export const Container = styled.div<IListProps>`
         font-size: 21px;
         font-weight: 700;
       }
+
+      div {
+        cursor: pointer;
+        margin: 0 0 0 24px;
+        color: #fff;
+        justify-content: space-between;
+
+        h5 {
+          font-weight: 700;
+        }
+      }
     }
   }
 
@@ -101,13 +112,17 @@ export const Container = styled.div<IListProps>`
         display: flex;
         justify-content: center;
 
-        button & button {
-          background-color: #dedede;
-
+        .inline{
+          background-color: ${({ listType }) => listType === 'inline' ? "#dedede" : "#004752;"}
         }
 
+        .card{
+          background-color: ${({ listType }) => listType === 'card' ? "#dedede" : "#004752;"}
+        }
+
+        
         > button {
-          background-color: #004752;
+          
 
           color: #fff;
           padding: 4px 12px;

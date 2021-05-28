@@ -15,7 +15,7 @@ const InlinePrimary: React.FC<ICardPrimary> = ({ data }: ICardPrimary) => {
   const handleShowCompany = useCallback(() => {
     toggleModalShow();
     setCompany(data)
-  }, [])
+  }, [data, setCompany, toggleModalShow])
 
   return (
     <Container>

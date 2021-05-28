@@ -6,7 +6,7 @@ interface IContainerProps{
 
 export const Container = styled.div<IContainerProps>`
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  
 
   label {
     color: red;

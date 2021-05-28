@@ -12,16 +12,14 @@ const CardList: React.FC<ICardPrimary> = ({ data }: ICardPrimary) => {
   const { toggleModalShow, setCompany } = useCompanyModal();
 
   const handleShowCompany = useCallback(() => {
-    console.log(data)
-
     setCompany(data)
     toggleModalShow()
-  }, [data])
+  }, [data, setCompany, toggleModalShow])
 
   return (
     <Container >
       <Thumbnail src={`https://source.unsplash.com/random/?office/${data.id}`} />
-      <Subtitle>CNPF: {data.cnpj} </Subtitle>
+      <Subtitle>CNPJ: {data.cnpj} </Subtitle>
       <Title>{data.name}</Title>
       <Description>{getLabelFromEarnings(data.anual_earnings)}</Description>
       <div>

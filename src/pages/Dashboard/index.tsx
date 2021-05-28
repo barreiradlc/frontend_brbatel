@@ -1,19 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FaBorderAll, FaChevronLeft, FaChevronRight, FaList, FaTimes } from 'react-icons/fa';
+import React, { useCallback, useState } from 'react';
+import { FaBorderAll, FaChevronLeft, FaChevronRight, FaList, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 
 import { Container } from './styles';
 import logoBRBatel from '../../assets/Assinatura_Horizontal-logo.png'
-import { FaUserCircle } from 'react-icons/fa';
 import Button from '../../components/Button';
 import CardList from '../../components/Companies/CardList';
-import { api } from '../../services/api';
-import { IANUAL_EARNINGS, ICompany } from '../../types/ICompany';
-import { getLabelFromEarnings } from '../../utils/companyUtils';
 import InlineList from '../../components/Companies/InlineList';
-import { ModalForm } from '../../components/Companies/ModalForm';
-import { ModalShow } from '../../components/Companies/ModalShow';
 import { useCompanyModal } from '../../hooks/CompanyModalProvider';
 import { useCompanyList } from '../../hooks/CompanyListProvider';
+import { useHistory } from 'react-router-dom';
 
 export const ANNUAL_EARNINGS = [
   { label : 'BELOW_10_MIL'},
@@ -23,15 +19,10 @@ export const ANNUAL_EARNINGS = [
   { label : 'ABOVE_500_MIL'}
 ]
 
-interface IOptions {
-  take: number;
-  page: number;
-  query: string;
-}
-
 const Dashboard: React.FC = () => {
-  const { toggleModalForm } = useCompanyModal()
-  const [modalOpenModal,setOpenModal] = useState(false);    
+  const history = useHistory()
+  const { name } = JSON.parse(`${localStorage.getItem('@BR_batel:user')}`)
+  const { toggleModalForm } = useCompanyModal()  
   const [listType, setListType] = useState<'card' | 'inline'>('card');  
   const { companies, handleUpdateOptions, options, haveMore, total } = useCompanyList()
 
@@ -69,6 +60,11 @@ const Dashboard: React.FC = () => {
     })
   }, [haveMore, options, handleUpdateOptions])
 
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('@BR_batel:user')
+    history.push('/')
+  }, [])
+
   return (
     <Container listType={listType}>
       <header>
@@ -76,7 +72,10 @@ const Dashboard: React.FC = () => {
         <input id="query" onChange={handleChangeInput} placeholder="Pesquisar empresa" />
         <div>
           <FaUserCircle color="#fff" size={32} />
-          <h5>Bem vindo, Augusto</h5>
+          <h5>Bem vindo, {name}</h5>
+          <div onClick={handleLogout}>
+            Sair&nbsp;<FaSignOutAlt />
+          </div>
         </div>
       </header>
       <div>
@@ -86,10 +85,10 @@ const Dashboard: React.FC = () => {
             <Button label="Adicionar +" onclick={toggleModalForm} />
           </div>
           <div className="change-layout">
-            <button onClick={() => setListType('inline')} disabled={listType === 'inline'}>
+            <button className="inline" onClick={() => setListType('inline')} disabled={listType === 'inline'}>
               <FaList />
             </button>
-            <button disabled={listType === 'card'} onClick={() => setListType('card')}>
+            <button className="card" disabled={listType === 'card'} onClick={() => setListType('card')}>
               <FaBorderAll />
             </button>
           </div>

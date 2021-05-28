@@ -93,7 +93,7 @@ export function ModalForm({ openedModal, handleToggleModal, company }: IModalFor
           <Input name="name" placeholder="Nome" />
           <InputMask name="cnpj" mask="99.999.999/9999-99" placeholder="XX.XXX.XXX/XXXX-XX" />
           <SelectInput name="anual_earnings">
-            <option value=''>Selecione</option>
+            <option value=''>Faturamento anual</option>
             {ANNUAL_EARNINGS.map(( earning ) => (
               <option key={earning.label} value={earning.label}>{getLabelFromEarnings(earning.label as IANUAL_EARNINGS)}</option>
             ))}

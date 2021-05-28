@@ -55,6 +55,9 @@ export const ModalContainer = styled(Modal)`
         img {
           width: 250px;
           height: 250px;          
+          margin: 21px;
+          border-radius: 50%;
+          border: 2px solid #dedede;
         }
 
         > div {

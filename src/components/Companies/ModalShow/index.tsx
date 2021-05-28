@@ -24,7 +24,7 @@ interface IModalShowProps{
 
 export function ModalShow({ openedModal, handleToggleModal, company }: IModalShowProps) {
 
-  const { toggleModalShow, toggleModalForm, setCompany } = useCompanyModal()
+  const { toggleModalShow, toggleModalForm } = useCompanyModal()
 
   const handleDeleteCompany = useCallback(async() => {
     const { isConfirmed } = await Swal.fire({
@@ -53,7 +53,6 @@ export function ModalShow({ openedModal, handleToggleModal, company }: IModalSho
           confirmButtonColor: '#004752'
         })
 
-        
         handleToggleModal()
       }
 
@@ -87,8 +86,12 @@ export function ModalShow({ openedModal, handleToggleModal, company }: IModalSho
             <h3>Rendimento Anual: {getLabelFromEarnings(company.anual_earnings)}</h3>
             <br />
             <h2>CNJP: {company.cnpj}</h2>
-            <br />
-            <h5>Sobre: {company.about}</h5>
+            {company.about && 
+              <>
+                <br />
+                <h5>Sobre: {company.about}</h5>
+              </>
+            }
           </div>
         </div>
         <footer>
